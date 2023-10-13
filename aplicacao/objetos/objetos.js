@@ -164,8 +164,8 @@ class Tabuleiro {
 
     exibir_console(turno) {
         push()
-        //desenhar quadro com o desafio
-        fill(12, 54, 32, 230)
+        //desenhar retangulo
+        fill("#185c37")
         stroke(255)
         strokeWeight(this.larguraBorda)
         rectMode(CENTER)
