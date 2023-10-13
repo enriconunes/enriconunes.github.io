@@ -119,6 +119,7 @@ function draw() {
 
   //Mostrar indicador do jogador atual
   jogador[turnoJogador - 1].exibir_indicador_turno()
+  exibir_console(turnoJogador)
 
   //Exibir caixa de desafio e altera a imagem do dado
   if (desafioAberto) {

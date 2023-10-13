@@ -162,6 +162,25 @@ class Tabuleiro {
         pop()
     }
 
+    exibir_console(turno) {
+        push()
+        //desenhar quadro com o desafio
+        fill(12, 54, 32, 230)
+        stroke(255)
+        strokeWeight(this.larguraBorda)
+        rectMode(CENTER)
+        rect(width / 2, height / 2 + this.altura / 1.7, this.largura * 0.8, this.altura * 0.1)
+
+        //escrever a mensagem
+        let textoDesafio = `Vez do jogador ${turno}`
+        fill(255, 255, 255, 230)
+        strokeWeight(0)
+        textSize(this.largura * 0.02)
+        textAlign(CENTER, CENTER)
+        text(textoDesafio, width / 2, height / 2 + this.altura / 1.7)
+        pop()
+    }
+
     exibir_placar(configuracoesJogo) {
         push()
 
