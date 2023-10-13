@@ -19,15 +19,15 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   //Upload de imagens
-  logoImg = loadImage("./imagens/logo.png")
-  imagemDadoUm = loadImage("./imagens/dado1.png")
-  imagemDadoDois = loadImage("./imagens/dado2.png")
-  imagemDadoTres = loadImage("./imagens/dado3.png")
-  imagemDadoQuatro = loadImage("./imagens/dado4.png")
-  imagemDadoCinco = loadImage("./imagens/dado5.png")
-  imagemDadoSeis = loadImage("./imagens/dado6.png")
-  imagemDadoGirar = loadImage("./imagens/dadoGirar.png")
-  definicoesImg = loadImage("./imagens/definicoes.png")
+  logoImg = loadImage("../imagens/logo.png")
+  imagemDadoUm = loadImage("../imagens/dado1.png")
+  imagemDadoDois = loadImage("../imagens/dado2.png")
+  imagemDadoTres = loadImage("../imagens/dado3.png")
+  imagemDadoQuatro = loadImage("../imagens/dado4.png")
+  imagemDadoCinco = loadImage("../imagens/dado5.png")
+  imagemDadoSeis = loadImage("../imagens/dado6.png")
+  imagemDadoGirar = loadImage("../imagens/dadoGirar.png")
+  definicoesImg = loadImage("../imagens/definicoes.png")
 
   //Instanciar objetos
   logo = new Logo(logoImg);
