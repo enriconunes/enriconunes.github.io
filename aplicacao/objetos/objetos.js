@@ -5,16 +5,6 @@ class Logo {
         this.posX = 0
         this.largura = 0
         this.altura = 0
-
-        // if (width < 800) {
-        //     this.posX = width * 0.5 - width * 0.15
-        //     this.largura = width * 0.3
-        //     this.altura = width * 0.15
-        // } else {
-        //     this.posX = width * 0.5 - width * 0.1
-        //     this.largura = width * 0.2
-        //     this.altura = width * 0.1
-        // }
     }
 
     desenhar_logo(tabuleiro) {
@@ -111,6 +101,7 @@ class Tabuleiro {
         this.cor = "#699669"
         this.larguraBorda = 2;
         this.corBorda = 255;
+        this.textoConsoleLateral = ""
 
         //Manter a proporçao 16:9
         this.largura = width * 0.9;
@@ -164,7 +155,7 @@ class Tabuleiro {
 
     exibir_console(turno) {
         push()
-        //desenhar retangulo
+        //desenhar quadro com o desafio
         fill("#185c37")
         stroke(255)
         strokeWeight(this.larguraBorda)
@@ -204,6 +195,82 @@ class Tabuleiro {
             let texto = `${n + 1}º.     Pontuação: ${configuracoesJogo.ordemChegada[n].pontuacao}`
             text(texto, width / 2, height / 2 + this.largura * 0.055 * n)
             configuracoesJogo.ordemChegada[n].desenhar_jogador_placar(this, width / 2 - this.largura * 0.065, height / 2 - this.largura * 0.01 + this.largura * 0.055 * n)
+        }
+
+        pop()
+    }
+
+    exibir_duelo(jogadorTurnoAtual, jogadorCasaOcupada) {
+        push()
+        //desenhar quadro com o desafio
+        fill(12, 54, 32, 230)
+        stroke(255)
+        strokeWeight(this.larguraBorda)
+        rectMode(CENTER)
+        rect(width / 2, height / 2, this.largura * 0.7, this.altura * 0.3)
+
+        //escrever a mensagem
+        let textoDesafio = `Jogador ${jogadorTurnoAtual.numero} caiu na casa ocupada pelo jogador ${jogadorCasaOcupada.numero} \ndeverão realizar um duelo!`
+        fill(255, 255, 255, 230)
+        strokeWeight(0)
+        textSize(this.largura * 0.025)
+        textAlign(CENTER, CENTER)
+        text(textoDesafio, width / 2, height / 2)
+
+        let vezJogador;
+        if (qtdGirosDado == 0) {
+            vezJogador = jogadorTurnoAtual.numero;
+        } else if (qtdGirosDado == 1) {
+            vezJogador = jogadorCasaOcupada.numero;
+        } else {
+            vezJogador = undefined
+        }
+
+        fill("yellow")
+        textSize(this.largura * 0.02)
+        strokeWeight(1)
+        stroke(0)
+        let textoDesafio2 = `Vez do jogador ${vezJogador} lançar o dado!`
+        text(textoDesafio2, width / 2, height / 1.8)
+
+        pop()
+    }
+
+    exibir_console_lateral() {
+        push()
+        //desenhar quadro com o desafio
+        fill("#185c37")
+        stroke(255)
+        strokeWeight(this.larguraBorda)
+        rectMode(CENTER)
+
+        if (width >= 1280) {
+            //exibir o console na lateral
+            rect(width / 2 - this.largura / 2 - this.largura * 0.2 / 1.4, height / 2 - this.altura / 2 + this.altura * 0.25 / 2, this.largura * 0.25, this.altura * 0.25)
+        } else {
+            //exibir o console embaixo
+            rect(width / 2, height / 2 + this.altura / 1.25, this.largura * 0.25, this.altura * 0.25)
+        }
+
+        //escrever a mensagem
+        fill(255, 255, 255, 230)
+        strokeWeight(0.5)
+        textSize(this.largura * 0.018)
+
+        if (width >= 1280) {
+            text("CONSOLE", width / 2 - this.largura / 2 - this.largura * 0.2 / 1.4, height / 2 - this.altura / 2 + this.altura * 0.25 / 4.5)
+        } else {
+            text("CONSOLE", width / 2, height / 2 + this.altura / 1.35)
+        }
+
+        strokeWeight(0)
+        textSize(this.largura * 0.015)
+        textAlign(CENTER, CENTER)
+
+        if (width >= 1280) {
+            text(this.textoConsoleLateral, width / 2 - this.largura / 2 - this.largura * 0.2 / 1.4, height / 2 - this.altura / 2 + this.altura * 0.25 / 1.8)
+        } else {
+            text(this.textoConsoleLateral, width / 2, height / 2 + this.altura / 1.23)
         }
 
         pop()
@@ -253,14 +320,14 @@ class Casa {
         pop()
     }
 
-    resolver_desafio(jogador, valorDado) {
+    resolver_desafio(jogador, valorDado, tabuleiro) {
         if (valorDado > this.desafioDadoMaiorQue && valorDado < this.desafioDadoMenorQue) {
-            desafioAberto = false
+            tabuleiro.textoConsoleLateral = `Jogador ${jogador.numero} passou\nno desafio e permaneceu\nno mesmo lugar.`
         } else {
             jogador.posicao -= this.desafioVoltarCasasQtd
-            desafioAberto = false
+            tabuleiro.textoConsoleLateral = `Jogador ${jogador.numero} perdeu\no desafio e voltou\n${this.desafioVoltarCasasQtd} casas.`
         }
-
+        desafioAberto = false
         console.log("Valor dado desafio: ", valorDado)
     }
 }
@@ -314,7 +381,7 @@ class Jogador {
 
         //Formato do jogador
         this.posicaoCirculoX = posicaoX
-        this.posicaoCirculoY = posicaoY 
+        this.posicaoCirculoY = posicaoY
         this.circuloLargura = tabuleiro.altura / 10 * 0.3
         triangle(this.posicaoCirculoX, this.posicaoCirculoY, this.posicaoCirculoX - this.circuloLargura / 2, this.posicaoCirculoY + this.circuloLargura * 1.5, this.posicaoCirculoX + this.circuloLargura / 2, this.posicaoCirculoY + this.circuloLargura * 1.5)
         ellipse(this.posicaoCirculoX, this.posicaoCirculoY, this.circuloLargura, this.circuloLargura);
@@ -323,7 +390,7 @@ class Jogador {
         textAlign(CENTER, CENTER)
         fill(255)
         strokeWeight(0)
-        textSize(this.circuloLargura*0.8)
+        textSize(this.circuloLargura * 0.8)
         text(this.numero, this.posicaoCirculoX, this.posicaoCirculoY)
 
         pop()
@@ -332,7 +399,7 @@ class Jogador {
 
     mover_jogador(valorDado) {
 
-        //So move o jogador se nao houver um desafio em aberto
+        //So move o jogador se nao houver um desafio ou um duelo em aberto
         if (!desafioAberto) {
             if (this.posicao + valorDado <= 46) {
                 if (this.posicao == 0) {
@@ -341,7 +408,7 @@ class Jogador {
                     }
                 } else {
                     this.posicao += valorDado
-                } 
+                }
             }
         }
 
@@ -365,6 +432,45 @@ class Jogador {
         text(this.numero, this.posicaoCirculoX, this.posicaoCirculoY - this.circuloLargura * 1.5)
     }
 
+    // confere se existe algum jogador ja a ocupar a casa para qual this.jogador irá se mover
+    conferir_posicao_jogadores(jogador) {
+
+        //retorna true se a casa atual for um desafio
+        let casaIsDesafio = [2, 7, 11, 17, 21, 26, 28, 37, 40, 45, 46].includes(this.posicao)
+
+        // confere se nao está a comparar o jogador com ele mesmo e se a casa nao é um desafio
+        if (jogador.numero != this.numero && !casaIsDesafio && this.posicao != 0) {
+            if (jogador.posicao == this.posicao) {
+                return true
+            }
+        } return false
+    }
+
+    resolver_duelo(jogadorTurnoAtual, jogadorCasaOcupada, valorDado1, valorDado2, tabuleiro) {
+
+        if (qtdGirosDado < 1) {
+            qtdGirosDado++
+        } else {
+            qtdGirosDado = 0
+            dueloAberto = false
+
+            // comparar valores dos dados de cada jogador
+            if (valorDado1 > valorDado2) {
+                jogadorCasaOcupada.posicao = 0
+                tabuleiro.textoConsoleLateral = `Jogador ${jogadorTurnoAtual.numero} venceu o duelo\npor ${valorDado1} a ${valorDado2} e o jogador ${jogadorCasaOcupada.numero} voltou\nao início.`
+            }
+            else if (valorDado1 == valorDado2) {
+                jogadorTurnoAtual.posicao = 0
+                tabuleiro.textoConsoleLateral = `Jogador ${jogadorCasaOcupada.numero} venceu o duelo\npelo empate de ${valorDado2} a ${valorDado1} e o jogador ${jogadorTurnoAtual.numero}\nvoltou ao início.`
+            }
+            else if (valorDado1 < valorDado2) {
+                jogadorTurnoAtual.posicao = 0
+                tabuleiro.textoConsoleLateral = `Jogador ${jogadorCasaOcupada.numero} venceu o duelo\npor ${valorDado2} a ${valorDado1} e o jogador ${jogadorTurnoAtual.numero} voltou\nao início.`
+            }
+
+        }
+    }
+
 }
 
 class Jogo {
@@ -374,16 +480,16 @@ class Jogo {
         this.ordemChegada = [];
     }
 
-    adicionar_jogador_lista_chegada(jogador){
-        if (!this.ordemChegada.includes(jogador)){
+    adicionar_jogador_lista_chegada(jogador) {
+        if (!this.ordemChegada.includes(jogador)) {
             this.ordemChegada.push(jogador)
         }
     }
 
     confere_terminou() {
-        if (this.ordemChegada.length == this.qtdJogadores-1){
+        if (this.ordemChegada.length == this.qtdJogadores - 1) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }
